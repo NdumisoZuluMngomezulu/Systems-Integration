@@ -1,0 +1,59 @@
+version: '3.8'
+
+networks:
+  integration-net:
+    driver: bridge
+
+services:
+  # Messaging Middleware
+  broker:
+    image: rabbitmq:3-management
+    container_name: rmq-broker
+    ports:
+      - "15672:15672" # Dashboard accessible to host machine
+    networks:
+      - integration-net
+
+  # Node.js Producer Microservice
+  order-service:
+    image: node:18-alpine
+    container_name: node-order-service
+    working_dir: /usr/src/app
+    volumes:
+      - ./order-service:/usr/src/app
+    command: sh -c "npm install && node server.js"
+    environment:
+      - PORT=3000
+      - RABBITMQ_URL=amqp://broker:5672
+    depends_on:
+      - broker
+    networks:
+      - integration-net
+
+  # Python Consumer Microservice
+  inventory-service:
+    image: python:3.10-slim
+    container_name: python-inventory-service
+    working_dir: /app
+    volumes:
+      - ./inventory-service:/app
+    command: sh -c "pip install -r requirements.txt && python worker.py"
+    environment:
+      - RABBITMQ_URL=amqp://broker:5672
+    depends_on:
+      - broker
+    networks:
+      - integration-net
+
+  # Reverse Proxy / API Gateway Pattern Entrypoint
+  api-gateway:
+    image: nginx:alpine
+    container_name: nginx-gateway
+    ports:
+      - "80:80" # Standard HTTP port open to clients
+    volumes:
+      - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - order-service
+    networks:
+      - integration-net
