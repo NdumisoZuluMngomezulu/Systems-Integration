@@ -32,19 +32,19 @@ def main():
     #parsing connection details
     url = pika.URLParameters(RabbitMQ_URL);
     connection = pika.BlockingConnection(url)
-    channel = connection.channel()
+    channel = connection.channel();
 
-    channel.queue_declare(queue=QUEUE_NAME, durable=True) #check that queue exists
+    channel.queue_declare(queue=QUEUE_NAME, durable=True); #check that queue exists
     
-    channel.basic_qos(prefetch_count=1) #don't giver a worker more than one message at a time
+    channel.basic_qos(prefetch_count=1); #don't giver a worker more than one message at a time
 
-    channel.basic_consume(queue=QUEUE_NAME, on_message_callback=process_order)
+    channel.basic_consume(queue=QUEUE_NAME, on_message_callback=process_order);
 
-    print(" [*] Inventory Worker is running. Waiting for order events. Press CTRL+C to exit.")
-    channel.start_consuming()
+    print(" [*] Inventory Worker is running. Waiting for order events. Press CTRL+C to exit.");
+    channel.start_consuming();
 
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print('Worker stopped.')
+        print('Worker stopped.');
