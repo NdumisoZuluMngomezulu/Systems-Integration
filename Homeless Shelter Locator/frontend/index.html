@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find a Shelter — Gauteng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">●</span>
+      <span class="brand-name">Find a Shelter</span>
+    </div>
+    <p class="tagline">Locate homeless shelters near you in Gauteng</p>
+  </header>
+
+  <main class="container">
+
+    <section class="search-panel" aria-label="Search for nearby shelters">
+      <button id="locate-btn" class="btn btn-primary" type="button">
+        <span aria-hidden="true">📍</span> Use my location
+      </button>
+
+      <div class="search-divider"><span>or</span></div>
+
+      <label for="area-select" class="field-label">Choose an area</label>
+      <select id="area-select">
+        <option value="">Select a town or suburb…</option>
+      </select>
+
+      <div class="filters">
+        <label for="gender-filter" class="field-label">Serves</label>
+        <select id="gender-filter">
+          <option value="">Anyone</option>
+          <option value="men">Men</option>
+          <option value="women">Women</option>
+          <option value="children">Children</option>
+          <option value="families">Families</option>
+        </select>
+
+        <label for="radius-filter" class="field-label">Within</label>
+        <select id="radius-filter">
+          <option value="10000">10 km</option>
+          <option value="25000" selected>25 km</option>
+          <option value="50000">50 km</option>
+          <option value="100000">100 km</option>
+        </select>
+      </div>
+
+      <p id="status-message" class="status-message" role="status"></p>
+    </section>
+
+    <section class="results-layout">
+      <div id="map" aria-label="Map of nearby shelters"></div>
+
+      <div id="results-list" class="results-list" aria-label="List of nearby shelters">
+        <p class="empty-state">Use your location or choose an area above to see nearby shelters.</p>
+      </div>
+    </section>
+
+    <p class="disclaimer">
+      ⚠️ Shelter availability, capacity and contact details change often and may not be current here.
+      <strong>Always call ahead before travelling.</strong> If you are in immediate danger, call 10111 (police)
+      or 112 (from a mobile).
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Sample project — verify all shelter data before relying on it. Sources: National Homeless Network, local NPO registers.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
