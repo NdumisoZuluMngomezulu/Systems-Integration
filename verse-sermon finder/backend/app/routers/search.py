@@ -50,3 +50,31 @@ async def search(payload: schemas.SearchRequest, db: Session = Depends(get_db)):
     db.commit()
 
     return response
+
+@router.get("/history", response_model=List[schemas.HistoryItem])
+def get_history(db: Session = Depends(get_db)):
+    rows = (
+        db.query(models.SavedQuery)
+        .order_by(models.SavedQuery.created_at.desc())
+        .limit(50)
+        .all()
+    )
+    return rows
+
+
+@router.get("/history/{item_id}", response_model=schemas.SearchResponse)
+def get_history_item(item_id: int, db: Session = Depends(get_db)):
+    row = db.query(models.SavedQuery).filter(models.SavedQuery.id == item_id).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Saved query not found")
+    return json.loads(row.results_json)
+
+
+@router.delete("/history/{item_id}", status_code=204)
+def delete_history_item(item_id: int, db: Session = Depends(get_db)):
+    row = db.query(models.SavedQuery).filter(models.SavedQuery.id == item_id).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Saved query not found")
+    db.delete(row)
+    db.commit()
+    return None
